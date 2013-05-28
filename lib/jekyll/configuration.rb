@@ -117,7 +117,6 @@ module Jekyll
       raise "Configuration file: (INVALID) #{file}".yellow if !next_config.is_a?(Hash)
       Jekyll::Stevenson.info "Configuration file:", file
 
-      mode = nil
       # is a mode specified?
       if (next_config.has_key?('mode'))
         mode = next_config['mode']
