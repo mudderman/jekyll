@@ -116,6 +116,21 @@ module Jekyll
       next_config = YAML.safe_load_file(file)
       raise "Configuration file: (INVALID) #{file}".yellow if !next_config.is_a?(Hash)
       Jekyll::Stevenson.info "Configuration file:", file
+
+      mode = nil
+      # is a mode specified?
+      if (next_config.has_key?('mode'))
+        mode = next_config['mode']
+        Jekyll::Stevenson.info "Config has mode: ", mode
+
+        # Is there a config for the desired mode?
+        if (next_config.has_key?(mode))
+
+          # Read all the keys and values from the "mode" has and make them first class citizens of the "site" scope
+          next_config[mode].each {|key, value| next_config[key] = value}
+        end
+      end
+
       next_config
     end
 
