@@ -169,6 +169,18 @@ task :build => :gemspec do
   sh "mv #{gem_file} pkg"
 end
 
+task :make => :build do
+  if (ARGV[1] && ARGV[1].dup == "install")
+    puts "Installing pkg/#{gem_file}"
+    sh "gem install pkg/#{gem_file}"
+    # sh "notify-send \"Gem installed\" \"#{gem_file}\" -t 2000"
+  end
+end
+
+# yes, a hack, but it enables one to write "rake make install"
+# instead of rake make["install"] \o/
+task :install
+
 task :gemspec do
   # read spec file and split out manifest section
   spec = File.read(gemspec_file)

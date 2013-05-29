@@ -72,6 +72,19 @@ module Jekyll
     override = Configuration[override].stringify_keys
     config = config.read_config_files(config.config_files(override))
 
+    # Check for overridden mode for the config
+    mode = config['mode'] if config.has_key?('mode')
+    mode = override['mode'] if override.has_key?('mode')
+
+    Jekyll::Stevenson.info "Mode is:", mode if mode
+
+    # A mode is specifed and has values in the _config.yml
+    if (mode && config.has_key?('modes'))
+      mode_val = config['modes'][mode]
+      config = config.deep_merge(mode_val) if mode_val.instance_of?(Hash)
+      config = config.deep_merge(config.read_config_file(mode_val)) if mode_val.instance_of?(String)
+    end
+
     # Merge DEFAULTS < _config.yml < override
     config = config.deep_merge(override).stringify_keys
     set_timezone(config['timezone']) if config['timezone']
